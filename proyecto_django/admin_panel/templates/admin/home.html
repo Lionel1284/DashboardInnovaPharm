@@ -1,0 +1,214 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+  <div class="mt-2">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom fade-in-title">
+    <h1 class="h2">Dashboard Admin</h1>
+</div>
+
+<div class="row">
+    <!-- Usuarios totales -->
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3 fade-in-up">
+            <div class="card-header">Usuarios</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ total_users }} usuarios</h5>
+                <p class="card-text">Total de usuarios registrados en el sistema.</p>
+                <a href="{% url 'list_users' %}" class="btn btn-light">Ver todos</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Médicos -->
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3 fade-in-up">
+            <div class="card-header">Médicos</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ total_medicos }} médicos</h5>
+                <p class="card-text">Médicos activos en el sistema.</p>
+                <a href="{% url 'list_users' %}?rol=medico" class="btn btn-light">Ver médicos</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Farmacéuticos -->
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3 fade-in-up">
+            <div class="card-header">Farmacéuticos</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ total_farmaceuticos }} farmacéuticos</h5>
+                <p class="card-text">Farmacéuticos activos en el sistema.</p>
+                <a href="{% url 'list_users' %}?rol=farmaceutico" class="btn btn-light">Ver farmacéuticos</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Formulario -->
+<div class="row fade-in-up delay-5 mb-4">
+  <form method="get" class="row g-3 align-items-end">
+      <div class="col-auto">
+          <label for="start" class="form-label">Fecha inicio:</label>
+          <input type="date" id="start" name="start" class="form-control" value="{{ start_date|default:'' }}">
+      </div>
+      <div class="col-auto">
+          <label for="end" class="form-label">Fecha fin:</label>
+          <input type="date" id="end" name="end" class="form-control" value="{{ end_date|default:'' }}">
+      </div>
+      <div class="col-auto">
+          <button type="submit" class="btn btn-primary">Actualizar métricas</button>
+      </div>
+  </form>
+</div>
+
+
+
+
+<!-- Gráfico de métricas GA4 -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card fade-in-up delay-4">
+            <div class="card-header bg-dark text-white">
+                Métricas de la aplicación InnovaPharm
+            </div>
+             <div class="card-body" style="height: 400px;">
+                <div id="loadingSpinner" class="text-center py-5" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+                <canvas id="analyticsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos de animación -->
+<style>
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+.fade-in-up.delay-1 { animation-delay: 0.2s; }
+.fade-in-up.delay-2 { animation-delay: 0.4s; }
+.fade-in-up.delay-3 { animation-delay: 0.6s; }
+.fade-in-up.delay-4 { animation-delay: 0.8s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-title {
+    opacity: 0;
+    animation: fadeInTitle 1s ease-out forwards;
+    animation-delay: 0.1s;
+}
+
+@keyframes fadeInTitle {
+    to {
+        opacity: 1;
+    }
+}
+
+#analyticsChart {
+      width: 100% !important;
+      height: 100% !important;
+  }
+</style>
+
+
+<!-- Chart.js (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<!-- Script para aplicar animaciones con delay -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const active = parseInt("{{ analytics.active_users|default:'0' }}");
+    const newUsers = parseInt("{{ analytics.new_users|default:'0' }}");
+    const sessions = parseInt("{{ analytics.sessions|default:'0' }}");
+    const time = parseInt("{{ analytics.engagement_time|default:'0' }}");
+
+    // Solo si hay al menos una métrica válida
+    if (!isNaN(active) || !isNaN(newUsers) || !isNaN(sessions) || !isNaN(time)) {
+        const ctx = document.getElementById('analyticsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Usuarios Activos', 'Nuevos Usuarios', 'Sesiones', 'Tiempo de Participación (s)'],
+                datasets: [{
+                    label: 'Datos GA4',
+                    data: [active, newUsers, sessions, time],
+                    backgroundColor: ['#ffc107', '#28a745', '#17a2b8', '#6c757d'],
+                    borderRadius: 6,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.parsed.y} unidades`;
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                elements: {
+                    bar: {
+                        hoverBorderWidth: 3, // 🔧 borde al hacer hover
+                        borderSkipped: false // 🔧 pinta todo el borde
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+
+        });
+    }
+});
+</script>
+
+
+<!-- Spinner de carga en el Grafico -->
+<script>
+document.querySelector("form").addEventListener("submit", function () {
+    document.getElementById("loadingSpinner").style.display = "block";
+});
+</script>
+
+
+{% endblock %}

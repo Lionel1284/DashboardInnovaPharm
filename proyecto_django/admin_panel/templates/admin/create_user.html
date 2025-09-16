@@ -1,0 +1,178 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Crear Usuario{% endblock %}
+
+{% block extra_js %}
+<!-- Cargar nuestro script de formato RUT -->
+<script src="{% static 'admin/js/rut_formatter.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<h1>Crear Nuevo Usuario</h1>
+
+<form method="post" id="userForm">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+    
+    <!-- Información básica del usuario -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Información Básica</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="{{ form.rol.id_for_label }}" class="form-label">Rol</label>
+                        {{ form.rol }}
+                        {% if form.rol.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.rol.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.rut.id_for_label }}" class="form-label">RUT</label>
+                        {{ form.rut }}
+                        <div class="form-text">Formato: 12.345.678-9</div>
+                        {% if form.rut.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.rut.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="{{ form.correo.id_for_label }}" class="form-label">Correo Electrónico</label>
+                        {{ form.correo }}
+                        {% if form.correo.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.correo.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Información personal -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Información Personal</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
+                        {{ form.nombre }}
+                        {% if form.nombre.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.nombre.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="{{ form.apellido_paterno.id_for_label }}" class="form-label">Apellido Paterno</label>
+                        {{ form.apellido_paterno }}
+                        {% if form.apellido_paterno.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.apellido_paterno.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="{{ form.apellido_materno.id_for_label }}" class="form-label">Apellido Materno</label>
+                        {{ form.apellido_materno }}
+                        {% if form.apellido_materno.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.apellido_materno.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Campos específicos para médicos -->
+    <div id="medicoFields" class="card mb-4" style="display:none;">
+        <div class="card-header">
+            <h5 class="mb-0">Información Profesional</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="{{ form.especialidad.id_for_label }}" class="form-label">Especialidad</label>
+                        {{ form.especialidad }}
+                        {% if form.especialidad.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.especialidad.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="{{ form.firma_base64.id_for_label }}" class="form-label">Firma (Base64)</label>
+                        {{ form.firma_base64 }}
+                        {% if form.firma_base64.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.firma_base64.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botones de acción -->
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success">Crear Usuario</button>
+        <a href="{% url 'list_users' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+    // Mostrar campos específicos para médicos
+    document.getElementById('id_rol').addEventListener('change', function() {
+        var medicoFields = document.getElementById('medicoFields');
+        if (this.value === 'medico') {
+            medicoFields.style.display = 'block';
+        } else {
+            medicoFields.style.display = 'none';
+        }
+    });
+    
+    // Disparar el evento al cargar para que se muestren/oculten según el valor inicial
+    document.getElementById('id_rol').dispatchEvent(new Event('change'));
+    
+    // Validar formato de correo en tiempo real
+    document.getElementById('id_correo').addEventListener('blur', function() {
+        const email = this.value;
+        if (email && !email.includes('@')) {
+            this.setCustomValidity('El correo electrónico debe contener un @');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+</script>
+{% endblock %}

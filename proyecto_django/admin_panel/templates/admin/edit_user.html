@@ -1,0 +1,94 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Editar Usuario{% endblock %}
+
+{% block content %}
+<h1>Editar Usuario: {{ user.rut }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
+                {{ form.nombre }}
+                {% if form.nombre.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.nombre.errors }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.apellido_paterno.id_for_label }}" class="form-label">Apellido Paterno</label>
+                {{ form.apellido_paterno }}
+                {% if form.apellido_paterno.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.apellido_paterno.errors }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="{{ form.apellido_materno.id_for_label }}" class="form-label">Apellido Materno</label>
+                {{ form.apellido_materno }}
+                {% if form.apellido_materno.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.apellido_materno.errors }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3 form-check">
+                {{ form.activo }}
+                <label class="form-check-label" for="{{ form.activo.id_for_label }}">Usuario activo</label>
+                {% if form.activo.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.activo.errors }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Campos específicos para médicos -->
+    {% if user.rol == 'medico' %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="{{ form.especialidad.id_for_label }}" class="form-label">Especialidad</label>
+                {{ form.especialidad }}
+                {% if form.especialidad.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.especialidad.errors }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="{{ form.firma_base64.id_for_label }}" class="form-label">Firma (Base64)</label>
+                {{ form.firma_base64 }}
+                {% if form.firma_base64.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.firma_base64.errors }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <a href="{% url 'list_users' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
