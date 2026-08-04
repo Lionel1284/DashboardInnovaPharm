@@ -1,4 +1,4 @@
-# ⚙️ InnovaPharm - Dashboard Administrativo
+# InnovaPharm - Dashboard Administrativo
 
 > **Panel de administración centralizado y API backend desarrollado en Django para la gestión de usuarios, roles, métricas y seguridad de la plataforma InnovaPharm (Consultorio Raúl Brañes Farmer).**
 
@@ -12,7 +12,7 @@
 
 ---
 
-## 📌 Tabla de Contenidos
+## Tabla de Contenidos
 - [Acerca del Componente](#-acerca-del-componente)
 - [Funcionalidades del Dashboard](#-funcionalidades-del-dashboard)
 - [Stack Tecnológico](#-stack-tecnológico)
@@ -23,31 +23,31 @@
 
 ---
 
-## 📖 Acerca del Componente
+## Acerca del Componente
 
 Este módulo constituye la columna vertebral administrativa del ecosistema **InnovaPharm**. Proporciona a los administradores del Consultorio Raúl Brañes Farmer un panel web intuitivo y seguro para controlar el acceso a la plataforma, gestionar las cuentas de los distintos perfiles de usuario (médicos, farmacéuticos y pacientes) y monitorear el desempeño global del sistema.
 
 ---
 
-## ✨ Funcionalidades del Dashboard
+## Funcionalidades del Dashboard
 
-* **👤 Gestión de Usuarios y Perfiles (RBAC):**
+* **Gestión de Usuarios y Perfiles (RBAC):**
   * Creación, edición y administración de roles.
   * Listado global de usuarios registrados en el sistema.
   * Generación automática de contraseñas y credenciales seguras.
 
-* **📊 Métricas y Rendimiento:**
+* **Métricas y Rendimiento:**
   * Visualización de indicadores clave (recetas emitidas, validadas, activas).
   * Panel con métricas de rendimiento y uso de la plataforma.
 
-* **🔐 Seguridad y Control de Acceso:**
+* **Seguridad y Control de Acceso:**
   * Cierre automático de sesión por inactividad.
   * Sistema de bloqueo tras múltiples intentos fallidos de autenticación.
   * Gestión de permisos granulares por perfil para garantizar la confidencialidad médica.
 
 ---
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 * **Lenguaje:** Python (v3.10+)
 * **Framework Backend:** Django
@@ -57,7 +57,7 @@ Este módulo constituye la columna vertebral administrativa del ecosistema **Inn
 
 ---
 
-## 🛡️ Requisitos de Seguridad e ISO/IEC 25010
+## Requisitos de Seguridad e ISO/IEC 25010
 
 Este dashboard implementa directrices de la norma **ISO/IEC 25010**, destacando:
 
@@ -67,7 +67,7 @@ Este dashboard implementa directrices de la norma **ISO/IEC 25010**, destacando:
 
 ---
 
-## 📁 Estructura del Repositorio
+## Estructura del Repositorio
 
 ```text
 DashboardInnovaPharm/
