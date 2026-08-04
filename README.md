@@ -5,6 +5,11 @@
 ## Vista del Sistema
 
 ![Pantalla principal](/InterfazIniicial.png)
+
+![Lista de Usuarios](ListaUsuarios.png)
+
+![Creacion de Usuario](CreateUsuario.png)
+
 ---
 
 ## 📌 Tabla de Contenidos
