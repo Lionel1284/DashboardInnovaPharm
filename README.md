@@ -2,6 +2,9 @@
 
 > **Panel de administración centralizado y API backend desarrollado en Django para la gestión de usuarios, roles, métricas y seguridad de la plataforma InnovaPharm (Consultorio Raúl Brañes Farmer).**
 
+## Vista del Sistema
+
+![Pantalla principal](/InterfazIniicial.png)
 ---
 
 ## 📌 Tabla de Contenidos
